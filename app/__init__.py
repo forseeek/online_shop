@@ -13,22 +13,26 @@ def create_app():
         static_folder=os.path.join(base_dir, "static"),
     )
 
-    # Load config from JSON file
+    # load config from JSON file
     config_path = os.path.join(base_dir, 'config.json')
     with open(config_path) as f:
         config = json.load(f)
     app.config.update(config)
 
-    # Set up SQLAlchemy with absolute DB path
+    # set up SQLAlchemy with absolute DB path
     db_path = os.path.abspath(os.path.join(base_dir, config['DB_PATH']))
 
-    # Ensure the DB directory exists so SQLite can create the file
+    # ensure the DB directory exists so SQLite can create the file
     db_dir = os.path.dirname(db_path)
     if not os.path.exists(db_dir):
         os.makedirs(db_dir, exist_ok=True)
+    # set up SQLAlchemy
+    # sets path to database
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
+    # disable unnecessary message
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # import db and init db
     from .models import db
     db.init_app(app)
 
