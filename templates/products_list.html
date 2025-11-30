@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Product list</title>
+        <link rel="stylesheet" href="../static/style.css">
+    </head>
+    <body>
+        <h1>Products list</h1>
+
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Created</th>
+                <th>Updated</th>
+            </tr>
+            {% for product in products %}
+            <tr>
+                <th>{{product.id}}</th>
+                <th>{{product.name}}</th>
+                <th>{{product.description}}</th>
+                <th>{{product.price}}</th>
+                <th>{{product.created_at}}</th>
+                <th>{{product.updated_at}}</th>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </body>
+</html>
