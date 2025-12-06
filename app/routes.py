@@ -16,6 +16,8 @@ def contacts():
 
 @bp.route("/products")
 def products():
+    # gets products from database
     products = Product.query.all()
+    # render product_list.html
     return render_template("products_list.html",
                            products=products)

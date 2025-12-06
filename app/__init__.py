@@ -37,10 +37,16 @@ def create_app():
     from .models import db
     db.init_app(app)
 
+    # check if columns are missing if yes - add them
     _ensure_columns(db_path, 'products', 
                     {'created_at': 'DATETIME',
                      'updated_at': 'DATETIME',
-                     'description': 'TEXT'})
+                     'description': 'TEXT',
+                     'stock': 'INTEGER DEFAULT 0',
+                     'is_active': 'BOOLEAN DEFAULT 1',
+                     'category': 'STRING(50)',
+                     'rating': 'FLOAT DEFAULT 0.0',
+                     'sale': 'BOOLEAN DEFAULT 0'})
 
     # import blueprint that contains routes
     from .routes import bp as routes_bp
@@ -50,20 +56,29 @@ def create_app():
     # return the fully configured Flask app
     return app
 
+# ensure the given columns exist on the table and add them if missing
 def _ensure_columns(sqlite_path, table, columns):
     """Ensure the given columns exist on the SQLite table; add them if missing.
 
 
     This updates the SQLite file in-place (no backup) as requested.
     """
+    # checks if path to sqlite table exists
     if not os.path.exists(sqlite_path):
         return
+    # connects to the table
     conn = sqlite3.connect(sqlite_path)
+    # creates a cursor object that helps run SQL commands
     cur = conn.cursor()
+    # runs code
     try:
+        # runs SQL command that gets information about columns in the table
         cur.execute(f"PRAGMA table_info('{table}')")
+        # gets a list of all attributes in table and saves all values from second column that stores name of attributes to array
         existing = {row[1] for row in cur.fetchall()}  # row[1] is column name
+        # runs a cycle for every column and its type in columns dictionary
         for col, col_type in columns.items():
+            # if column is not in the table than adding column to the table
             if col not in existing:
                 stmt = f"ALTER TABLE {table} ADD COLUMN {col} {col_type};"
                 try:
@@ -82,6 +97,7 @@ def _ensure_columns(sqlite_path, table, columns):
             # ignore update errors; keep startup resilient
             pass
         conn.commit()
+    # if code in try block has an error, connection to database closes
     finally:
         cur.close()
         conn.close()
