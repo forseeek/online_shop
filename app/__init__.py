@@ -42,11 +42,11 @@ def create_app():
                     {'created_at': 'DATETIME',
                      'updated_at': 'DATETIME',
                      'description': 'TEXT',
-                     'stock': 'INTEGER DEFAULT 0',
-                     'is_active': 'BOOLEAN DEFAULT 1',
+                     'stock': 'INTEGER',
+                     'is_active': 'BOOLEAN',
                      'category': 'STRING(50)',
-                     'rating': 'FLOAT DEFAULT 0.0',
-                     'sale': 'BOOLEAN DEFAULT 0'})
+                     'rating': 'FLOAT',
+                     'sale': 'BOOLEAN'})
 
     # import blueprint that contains routes
     from .routes import bp as routes_bp
@@ -93,6 +93,14 @@ def _ensure_columns(sqlite_path, table, columns):
                 cur.execute(f"UPDATE {table} SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL;")
             if 'updated_at' in columns:
                 cur.execute(f"UPDATE {table} SET updated_at = CURRENT_TIMESTAMP WHERE updated_at IS NULL;")
+            if 'stock' in columns:
+                cur.execute(f"UPDATE {table} SET stock = 0 WHERE stock IS NULL;")
+            if 'is_active' in columns:
+                cur.execute(f"UPDATE {table} SET is_active = true WHERE is_active IS NULL;")
+            if 'rating' in columns:
+                cur.execute(f"UPDATE {table} SET rating = 0 WHERE rating IS NULL;")
+            if 'sale' in columns:
+                cur.execute(f"UPDATE {table} SET sale = true WHERE sale IS NULL;")
         except Exception:
             # ignore update errors; keep startup resilient
             pass
