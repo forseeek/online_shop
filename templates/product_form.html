@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PhoneStore | {{action}} Product</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <h1>{{action}} Product</h1>
+
+    <form method="post">
+
+        <label>Name
+            <input type="text" name="name" value="{{product.name if product else ''}}" required>
+        </label>
+        <br>
+
+        <label>Price
+            <input type="number" name="price" step=0.01 value="{{product.price if product else 0}}" required min="0">
+        </label>
+        <br>
+
+        <button type="submit">{{action}}</button>
+
+    </form>
+
+    <a href="{{url_for('routes.products')}}">Back to list</a>
+
+</body>
+
+</html>
