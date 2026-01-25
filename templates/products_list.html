@@ -1,45 +1,56 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>PhoneStore | Список продуктів</title>
-        <link rel="stylesheet" href="../static/style.css">
-    </head>
-    <body>
-        <h1>Список продуктів</h1>
 
-        <!-- link to add product page -->
-        <a href="{{ url_for('routes.add_product') }}">Add Product</a>
+<head>
+    <title>PhoneStore | Список продуктів</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
 
-        <table border="1">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Description</th>
-                <th>Stock</th>
-                <th>Is Active</th>
-                <th>Category</th>
-                <th>Rating</th>
-                <th>Sale</th>
-                <th>Created</th>
-                <th>Updated</th>
-            </tr>
-            {% for product in products %}
-            <tr>
-                <th>{{product.id}}</th>
-                <th>{{product.name}}</th>
-                <th>{{product.price}}</th>
-                <th>{{product.description}}</th>
-                <th>{{product.stock}}</th>
-                <th>{{product.is_active}}</th>
-                <th>{{product.category}}</th>
-                <th>{{product.rating}}</th>
-                <th>{{product.sale}}</th>
-                <th>{{product.created_at}}</th>
-                <th>{{product.updated_at}}</th>
-            </tr>
-            {% endfor %}
-        </table>
+<body>
+    <h1>Список продуктів</h1>
 
-    </body>
+    <!-- link to add product page -->
+    <a href="{{ url_for('routes.add_product') }}">Add Product</a>
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Stock</th>
+            <th>Is Active</th>
+            <th>Category</th>
+            <th>Rating</th>
+            <th>Sale</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th>Edit</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+            <td>{{product.id}}</td>
+            <td>{{product.name}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.description}}</td>
+            <td>{{product.stock}}</td>
+            <td>{{product.is_active}}</td>
+            <td>{{product.category}}</td>
+            <td>{{product.rating}}</td>
+            <td>{{product.sale}}</td>
+            <td>{{product.created_at}}</td>
+            <td>{{product.updated_at}}</td>
+            <td>
+                <a href="{{ url_for('routes.update_product', product_id=product.id) }}">Edit</a>
+                <form action="{{ url_for('routes.delete_product', product_id=product.id) }}" method="post"
+                    style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+
 </html>

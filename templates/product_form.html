@@ -65,9 +65,9 @@
 
             <div class="mb-3">
                 <label for="rating" class="form-label">Rating</label>
+                <output for="rating" id="ratingValue" aria-hidden="true"></output>
                 <input type="range" id="rating" class="form-range" name="rating" step="0.1" min="0" max="5"
                     value="{{product.rating if product else 0}}">
-                <output for="rating" id="ratingValue" aria-hidden="true"></output>
 
                 <script>
                     // This is an example script, please modify as needed
