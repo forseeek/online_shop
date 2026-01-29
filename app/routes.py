@@ -67,20 +67,29 @@ def add_product():
     # if method type is get, then render page with variables action and product
     return render_template("product_form.html", action="Add", product=None)
 
-
+# route for deleting a product
+# <int:product_id> - <type of variable:name variable>
 @bp.route("/delete/<int:product_id>", methods=["POST"])
 def delete_product(product_id):
+    # finding by product_id a product from a database, if not exist - redirect to a 404 error (not founded) page
     product = Product.query.get_or_404(product_id)
+    # delete a product from database
     db.session.delete(product)
+    # committing a change
     db.session.commit()
     flash("Product deleted!")
+    # redirect user to products page
     return redirect(url_for("routes.products"))
 
-
+# route for updating a product info
+# <int:product_id> - <type of variable:name variable>
 @bp.route("/update/<int:product_id>", methods=["GET", "POST"])
 def update_product(product_id):
+    # finding by product_id a product from a database, if not exist - redirect to a 404 error (not founded) page
     product = Product.query.get_or_404(product_id)
+    # if method is "POST" - update values in database
     if request.method == "POST":
+        # getting values from form
         product.name = request.form["name"]
         product.price = float(request.form["price"])
 
@@ -93,7 +102,10 @@ def update_product(product_id):
 
         print (f'''[DEBUG]: name={product.name}, price={product.price}, description={product.description}, stock={product.stock}, is_active={product.is_active}, category={product.category}, rating={product.rating}, sale={product.sale}''')
 
+        # committing a change
         db.session.commit()
         flash("Product updated!")
+        # redirect to a products page
         return redirect(url_for("routes.products"))
+    # if method is "GET" - render a page product_form with product info
     return render_template("product_form.html", action="Update", product=product)
