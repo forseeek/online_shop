@@ -8,8 +8,9 @@ bp = Blueprint("routes", __name__)
 # define a route for the main page
 @bp.route("/")
 def index():
+    products = Product.query.all()
     # return the html file for page
-    return render_template("index.html")
+    return render_template("index.html", products=products)
 
 
 @bp.route("/contacts")
@@ -42,7 +43,9 @@ def add_product():
         rating = float(request.form["rating"])
         sale = request.form.get("sale") == "on"
 
-        print (f'''[DEBUG]: name={name}, price={price}, description={description}, stock={stock}, is_active={is_active}, category={category}, rating={rating}, sale={sale}''')
+        print(
+            f"""[DEBUG]: name={name}, price={price}, description={description}, stock={stock}, is_active={is_active}, category={category}, rating={rating}, sale={sale}"""
+        )
 
         # create a new product class
         product = Product(
@@ -67,6 +70,7 @@ def add_product():
     # if method type is get, then render page with variables action and product
     return render_template("product_form.html", action="Add", product=None)
 
+
 # route for deleting a product
 # <int:product_id> - <type of variable:name variable>
 @bp.route("/delete/<int:product_id>", methods=["POST"])
@@ -80,6 +84,7 @@ def delete_product(product_id):
     flash("Product deleted!")
     # redirect user to products page
     return redirect(url_for("routes.products"))
+
 
 # route for updating a product info
 # <int:product_id> - <type of variable:name variable>
@@ -100,7 +105,9 @@ def update_product(product_id):
         product.rating = float(request.form["rating"])
         product.sale = request.form.get("sale") == "on"
 
-        print (f'''[DEBUG]: name={product.name}, price={product.price}, description={product.description}, stock={product.stock}, is_active={product.is_active}, category={product.category}, rating={product.rating}, sale={product.sale}''')
+        print(
+            f"""[DEBUG]: name={product.name}, price={product.price}, description={product.description}, stock={product.stock}, is_active={product.is_active}, category={product.category}, rating={product.rating}, sale={product.sale}"""
+        )
 
         # committing a change
         db.session.commit()
