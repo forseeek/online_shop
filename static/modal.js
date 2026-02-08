@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
   function buildMetaHTML(attrs) {
     return `
     <p><strong>Category:</strong> ${attrs.category || '—'}
-      • <strong>Rating:${attrs.rating || 0}/5.0 ⭐
+      • <strong>Rating: </strong> ${attrs.rating || 0}/5.0 ⭐
       • <strong>Sale:</strong> ${attrs.sale || 'False'}
-      • <strong>Active:${attrs.active || 'False'}
+      • <strong>Active:</strong> ${attrs.active || 'False'}
     </p>
     `
   }

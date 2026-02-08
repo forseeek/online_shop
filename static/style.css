@@ -365,7 +365,10 @@ footer p {
 
 .meta {
   color: #667;
-  margin-top: 8px;
+  /* margin-top: 8px; */
+  position: absolute;
+  margin-bottom: 1px;
+  bottom: 0;
 }
 
 @media (max-width: 640px) {
