@@ -2,77 +2,100 @@
 <html>
 
 <head>
-    <title>PhoneStore</title>
+    <title>Main page | PhoneStore</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 
 <body>
-    <h1>Онлайн-магазин телефонів</h1>
 
-    <div class="action-bar">
-        <!-- Link to the products list -->
-        <a href="{{ url_for('routes.products') }}" class="btn">Edit Products</a>
-    </div>
-    <div class="products">
-        <!-- cycle that goes through every product in products list and renders the card for product -->
-        {% for product in products%}
+    <div class="wrapper">
+        <header class="header-outer">
+            <div class="header-inner responsive-wrapper">
+                <div class="header-logo">
+                    <img src="../static/favicon.png">
+                    <div>
+                        <span class="title">noPhone</span>
+                        <span class="desc">Обери телефон своєї мрії</span>
+                    </div>
 
-        <div class="card">
-            <!-- show an image for product using product id
+                </div>
+                <nav class="header-navigation">
+                    <a href="{{ url_for('routes.index') }}">Home</a>
+                    <a href="{{ url_for('routes.contacts') }}">Contact Us</a>
+                    <button>Menu</button>
+                </nav>
+            </div>
+        </header>
+
+        <div class="action-bar">
+            <!-- Link to the products list -->
+            <a href="{{ url_for('routes.products') }}" class="btn">Edit Products</a>
+        </div>
+        <div class="products">
+            <!-- cycle that goes through every product in products list and renders the card for product -->
+            {% for product in products%}
+
+            <div class="card">
+                <!-- show an image for product using product id
             Product Id    Image path        
             id: 1      -> static/images/1.png 
             
             if image doesn't exist, then show default image (path: static/images/default.png)
             -->
-            <div class="card-top">
-                <img src="{{ url_for('static', filename='images/' ~ product.id ~ '.png') }}" alt="{{ product.name }}"
-                    onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default.png') }}'">
-            </div>
-
-            <hr>
-            <div class="card-bottom">
-                <h2 class="product-name">{{ product.name }}</h2>
-                <!-- show price with format: X.XX₴ -->
-                <p class="product-feature">Price: {{ '%.2f'|format(product.price) }}₴</p>
-                <p class="product-feature">Rating: {{product.rating}}/5⭐</p>
-                <p class="product-feature">Category: {{product.category}}</p>
-                <div class="card-actions">
-                    <button class="btn btn-details" data-name="{{product.name|e}}"
-                        data-price="{{ '%.2f'|format(product.price) }}" data-stock="{{ product.stock }}"
-                        data-description="{{ product.description|e }}" data-category="{{ product.category|e }}"
-                        data-rating="{{ product.rating }}" data-sale="{{ product.sale }}"
-                        data-active="{{ product.is_active }}"
-                        data-img="{{ url_for('static', filename='images/' ~ product.id ~ '.png') }}">
-                        Details
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-        {% endfor%}
-
-        <div id="product-modal" class="modal" aria-hidden="true">
-            <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-name">
-                <button class="modal-close" aria-label="Close">&times;</button>
-
-                <div class="modal-body">
-                    <img id="modal-image" src="" alt="Product image"
+                <div class="card-top">
+                    <img src="{{ url_for('static', filename='images/' ~ product.id ~ '.png') }}"
+                        alt="{{ product.name }}"
                         onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default.png') }}'">
+                </div>
 
-                    <div class="modal-content">
-                        <h2 id="modal-name"></h2>
-                        <p class="product-feature" id="modal-price"></p>
-                        <p id="modal-stock"></p>
-                        <p id="modal-desc"></p>
-                        <p id="modal-meta" class="meta"></p>
+                <hr>
+                <div class="card-bottom">
+                    <h2 class="product-name">{{ product.name }}</h2>
+                    <!-- show price with format: X.XX₴ -->
+                    <p class="product-feature">Price: {{ '%.2f'|format(product.price) }}₴</p>
+                    <p class="product-feature">Rating: {{product.rating}}/5⭐</p>
+                    <p class="product-feature">Category: {{product.category}}</p>
+                    <div class="card-actions">
+                        <button class="btn btn-details" data-name="{{product.name|e}}"
+                            data-price="{{ '%.2f'|format(product.price) }}" data-stock="{{ product.stock }}"
+                            data-description="{{ product.description|e }}" data-category="{{ product.category|e }}"
+                            data-rating="{{ product.rating }}" data-sale="{{ product.sale }}"
+                            data-active="{{ product.is_active }}"
+                            data-img="{{ url_for('static', filename='images/' ~ product.id ~ '.png') }}">
+                            Details
+                        </button>
                     </div>
                 </div>
 
+            </div>
 
+            {% endfor%}
+
+            <div id="product-modal" class="modal" aria-hidden="true">
+                <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-name">
+                    <button class="modal-close" aria-label="Close">&times;</button>
+
+                    <div class="modal-body">
+                        <img id="modal-image" src="" alt="Product image"
+                            onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default.png') }}'">
+
+                        <div class="modal-content">
+                            <h2 id="modal-name"></h2>
+                            <p class="product-feature" id="modal-price"></p>
+                            <p id="modal-stock"></p>
+                            <p id="modal-desc"></p>
+                            <p id="modal-meta" class="meta"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <footer>
+            <p>© 2026 Copyright. ТОВ «Zhytomyr noPhone». All right reserved.</p>
+            <p>noPhone - Online Phone Store that works all around the world</p>
+        </footer>
     </div>
 
     <!-- connect the script for modal window -->
