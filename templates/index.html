@@ -4,27 +4,47 @@
 <head>
     <title>PhoneStore</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.png') }}">
 </head>
 
 <body>
     <h1>Онлайн-магазин телефонів</h1>
 
     <div class="action-bar">
+        <!-- Link to the products list -->
         <a href="{{ url_for('routes.products') }}" class="btn">Edit Products</a>
     </div>
     <div class="products">
+        <!-- cycle that goes through every product in products list and renders the card for product -->
         {% for product in products%}
 
         <div class="card">
-            <img src="{{ url_for('static', filename='images/' ~ product.id ~ '.png') }}" alt="{{ product.name }}"
-                onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default.png') }}'">
-            <h2 class="product-name">{{ product.name }}</h2>
-            <p class="product-feature">Price: {{ '%.2f'|format(product.price) }}₴</p>
+            <!-- show an image for product using product id
+            Product Id    Image path        
+            id: 1      -> static/images/1.png 
+            
+            if image doesn't exist, then show default image (path: static/images/default.png)
+            -->
+            <div class="card-top">
+                <img src="{{ url_for('static', filename='images/' ~ product.id ~ '.png') }}" alt="{{ product.name }}"
+                    onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default.png') }}'">
+            </div>
+
+            <hr>
+            <div class="card-bottom">
+                <h2 class="product-name">{{ product.name }}</h2>
+                <!-- show price with format: X.XX₴ -->
+                <p class="product-feature">Price: {{ '%.2f'|format(product.price) }}₴</p>
+                <p class="product-feature">Rating: {{product.rating}}/5⭐</p>
+                <p class="product-feature">Category: {{product.category}}</p>
+            </div>
+
         </div>
 
         {% endfor%}
     </div>
-    
+
+    <!-- connect the script for modal window -->
     <script src="{{ url_for('static', filename='modal.js') }}"></script>
 
 </body>
