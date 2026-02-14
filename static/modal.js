@@ -1,5 +1,6 @@
-// My
+// function for modal
 document.addEventListener('DOMContentLoaded', function () {
+  // get elements of modal window
   var modal = document.getElementById('product-modal')
   var modalImage = document.getElementById('modal-image')
 
@@ -11,16 +12,21 @@ document.addEventListener('DOMContentLoaded', function () {
   var modalMeta = document.getElementById('modal-meta')
   var modalClose = document.querySelector('.modal-close')
 
+  // open modal function
   function openModal() {
+    // adding class open for modal for showing it
     modal.classList.add('open')
     modal.setAttribute('aria-hidden', 'false')
   }
 
+  // close modal function
   function closeModal() {
+    // remove class open for modal for hiding it
     modal.classList.remove('open')
     modal.setAttribute('aria-hidden', 'true')
   }
 
+  // create a html with product properties
   function buildMetaHTML(attrs) {
     return `
     <p><strong>Category:</strong> ${attrs.category || '—'}
@@ -32,7 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.querySelectorAll('.btn-details').forEach(function (btn) {
+  // when user clicks on the button details
     btn.addEventListener('click', function () {
+      // save attributes from button in object
       var attrs = {
         image: btn.getAttribute('data-img'),
         name: btn.getAttribute('data-name'),
@@ -45,24 +53,27 @@ document.addEventListener('DOMContentLoaded', function () {
         active: btn.getAttribute('data-active'),
       }
 
+      // insert attributes data in html
       modalImage.src = attrs.image
       modalName.textContent = attrs.name
       modalPrice.textContent = 'Price: $' + attrs.price
       modalStock.textContent = 'Stock: ' + attrs.stock
       modalDesc.textContent = attrs.description || 'No description'
+      // build html code for product properties
       modalMeta.innerHTML = buildMetaHTML(attrs)
 
+      // open modal window
       openModal()
     })
   })
 
-  // click on button X
+  // click on button X closes it
   modalClose.addEventListener('click', closeModal)
-  // click outside the modal
+  // click outside the modal closes it
   modal.addEventListener('click', function (e) {
     if (e.target === modal) closeModal()
   })
-  // click ESC button
+  // click ESC button closes it
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeModal()
   })

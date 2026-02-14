@@ -236,8 +236,7 @@ footer p {
 }
 
 .card img {
-  width: 100%;
-  height: 100%;
+  height: 220px;
   object-fit: cover;
   border-radius: 8px;
   /* margin-bottom: 10px; */
@@ -258,6 +257,27 @@ footer p {
   color: #445;
   font-weight: 600;
   margin: 6px 0;
+}
+
+.product-not-active *:not(.product-is-active) {
+  color: rgb(178, 178, 178);
+}
+
+.product-not-active:hover {
+  transform: translateY(0px);
+  box-shadow: 0 8px 24px rgba(18, 38, 63, 0.08);
+}
+
+.product-not-active img {
+  opacity: 0.5;
+}
+
+.product-not-active button {
+  background-color: lightgray;
+}
+
+.product-is-active {
+  color: rgb(198, 3, 3);
 }
 
 .card-actions {
