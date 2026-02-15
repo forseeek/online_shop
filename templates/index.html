@@ -44,9 +44,19 @@
             if image doesn't exist, then show default image (path: static/images/default.png)
             -->
                 <div class="card-top">
-                    <img src="{{ url_for('static', filename='images/' ~ product.id ~ '.png') }}"
-                        alt="{{ product.name }}"
-                        onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default.png') }}'">
+
+                    <div class="image-wrapper">
+                        <img src="{{ url_for('static', filename='images/' ~ product.id ~ '.png') }}"
+                            alt="{{ product.name }}"
+                            onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/default.png') }}'">
+
+                        <!-- show sale image if product.sale is True -->
+                        {% if product.sale %}
+                        <img class="sale-icon" src="{{ url_for('static', filename=" sale.png") }}" alt="Sale">
+                        {% endif %}
+                    </div>
+
+
                 </div>
 
                 <hr>
@@ -54,7 +64,14 @@
                     <h2 class="product-name">{{ product.name }}</h2>
                     <!-- show price with format: X.XX₴ -->
                     <p class="product-feature">Price: {{ '%.2f'|format(product.price) }}₴</p>
-                    <p class="product-feature">Rating: {{product.rating}}/5⭐</p>
+                    <!-- rating block -->
+                    <div class="rating" data-rating="{{ product.rating }}">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
                     <p class="product-feature">Category: {{product.category}}</p>
 
                     <!-- LevelUp! -->
@@ -94,6 +111,13 @@
                             <h2 id="modal-name"></h2>
                             <p class="product-feature" id="modal-price"></p>
                             <p id="modal-stock"></p>
+                            <div class="rating" id="modal-rating">
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                                <span class="star">★</span>
+                            </div>
                             <p id="modal-desc"></p>
                             <p id="modal-meta" class="meta"></p>
                         </div>
@@ -110,6 +134,7 @@
 
     <!-- connect the script for modal window -->
     <script src="{{ url_for('static', filename='modal.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 
 </body>
 
