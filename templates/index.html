@@ -52,7 +52,13 @@
 
                         <!-- show sale image if product.sale is True -->
                         {% if product.sale %}
-                        <img class="sale-icon" src="{{ url_for('static', filename=" sale.png") }}" alt="Sale">
+                        <img class="sale-icon" src="{{ url_for('static', filename='sale.png') }}" alt="Sale">
+                        {% endif %}
+
+                        <!-- show top sale image if rating is more that 4.7 -->
+                        {% if product.rating > 4.7 %}
+                        <img class="top-sale-icon" src="{{ url_for('static', filename='top_sales.png') }}"
+                            alt="Top Sales">
                         {% endif %}
                     </div>
 
@@ -62,8 +68,14 @@
                 <hr>
                 <div class="card-bottom">
                     <h2 class="product-name">{{ product.name }}</h2>
-                    <!-- show price with format: X.XX₴ -->
-                    <p class="product-feature">Price: {{ '%.2f'|format(product.price) }}₴</p>
+                    <!-- show price with format: 
+                    when sale == False -> X.XX₴
+                    when sale == True  -> -15% -X.XX- X.XX₴ -->
+                    <p class="product-feature">Price: {% if product.sale %} <b>-15%</b> <s>{{
+                            '%.2f'|format(product.price) }}</s> <br> <span style="color: red;">{{
+                            '%.2f'|format(product.price * 0.85) }}₴</span>{% endif %}{{ '%.2f₴'|format(product.price) if
+                        product.sale == False }}</p>
+
                     <!-- rating block -->
                     <div class="rating" data-rating="{{ product.rating }}">
                         <span class="star">★</span>
@@ -77,6 +89,11 @@
                     <!-- LevelUp! -->
                     <p class="product-feature product-is-active">{{'Out of stock' if product.is_active == False else
                         ''}}</p>
+
+                    <!-- If stock is less than 10 -->
+                    <p class="product-feature"><b>
+                            {{ 'The product is running out' if product.stock < 10 else '' }}</b>
+                    </p>
 
                     <!-- card actions block -->
                     <div class="card-actions">
@@ -111,6 +128,11 @@
                             <h2 id="modal-name"></h2>
                             <p class="product-feature" id="modal-price"></p>
                             <p id="modal-stock"></p>
+
+                            <!-- Level Up -->
+                            <p id="modal-running-out" style="font-weight: bold;"></p>
+                            <p id="modal-top-sales" style="font-weight: bold;"></p>
+
                             <div class="rating" id="modal-rating">
                                 <span class="star">★</span>
                                 <span class="star">★</span>

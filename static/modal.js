@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var modalPrice = document.getElementById('modal-price')
   var modalStock = document.getElementById('modal-stock')
 
+  var modalRunningOut = document.getElementById('modal-running-out')
+  var modalTopSales = document.getElementById('modal-top-sales')
+
   var modalDesc = document.getElementById('modal-desc')
   var modalMeta = document.getElementById('modal-meta')
   var modalClose = document.querySelector('.modal-close')
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateRatingStars(rating) {
-    const ratingDiv = modal.getElementById('modal-rating')
+    const ratingDiv = document.getElementById('modal-rating')
     // get stars div block
     const stars = ratingDiv.querySelectorAll('.star')
 
@@ -94,8 +97,14 @@ document.addEventListener('DOMContentLoaded', function () {
       // insert attributes data in html
       modalImage.src = attrs.image
       modalName.textContent = attrs.name
-      modalPrice.textContent = 'Price: $' + attrs.price
+      modalPrice.innerHTML = `Price: ${attrs.sale == 'True' ? `<b>-15%</b> <s>${attrs.price}</s> <span style="color: red;">${(parseInt(attrs.price) * 0.85).toFixed(2)}</span>` : attrs.price + '₴'}`
       modalStock.textContent = 'Stock: ' + attrs.stock
+
+      modalRunningOut.textContent =
+        parseInt(attrs.stock) < 10 ? 'The product is running out' : ''
+      modalTopSales.textContent =
+        parseFloat(attrs.rating) > 4.7 ? 'Top sales' : ''
+
       modalDesc.textContent = attrs.description || 'No description'
       // build html code for product properties
       modalMeta.innerHTML = buildMetaHTML(attrs)

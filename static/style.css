@@ -277,6 +277,17 @@ footer p {
   pointer-events: none;
 }
 
+.top-sale-icon {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 45px !important;
+  height: auto !important;
+  transform: rotate(-10deg);
+  z-index: 10; /* номер шару. ЩОб було зверху */
+  pointer-events: none;
+}
+
 
 .product-name {
   font-size: 1.05rem;
@@ -423,10 +434,8 @@ footer p {
 
 .meta {
   color: #667;
-  /* margin-top: 8px; */
-  position: absolute;
+  margin-top: 8px;
   margin-bottom: 1px;
-  bottom: 0;
 }
 
 @media (max-width: 640px) {
