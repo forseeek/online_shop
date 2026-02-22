@@ -3,6 +3,7 @@ import json
 import os
 import sqlite3
 
+
 # function that creates an web app
 def create_app():
     # define a base project directory
@@ -15,38 +16,48 @@ def create_app():
     )
 
     # load config from JSON file
-    config_path = os.path.join(base_dir, 'config.json')
+    config_path = os.path.join(base_dir, "config.json")
     with open(config_path) as f:
         config = json.load(f)
     app.config.update(config)
 
-    # set up SQLAlchemy with absolute DB path
-    db_path = os.path.abspath(os.path.join(base_dir, config['DB_PATH']))
+    # Use DATABASE_URL env variable for Postgres if set, else fallback to SQLite
+    database_url = os.environ.get("DATABASE_URL")
+    db_path = None
+    if database_url:
+        print("DB URL is set. Postgres DB")
+        app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+    else:
+        print("DB URL is NOT set. SQLite DB")
+        db_path = os.path.abspath(os.path.join(base_dir, config["DB_PATH"]))
+        db_dir = os.path.dirname(db_path)
+        if not os.path.exists(db_dir):
+            os.makedirs(db_dir, exist_ok=True)
+        app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
 
-    # ensure the DB directory exists so SQLite can create the file
-    db_dir = os.path.dirname(db_path)
-    if not os.path.exists(db_dir):
-        os.makedirs(db_dir, exist_ok=True)
-    # set up SQLAlchemy
-    # sets path to database
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
     # disable unnecessary message
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # import db and init db
     from .models import db
+
     db.init_app(app)
 
     # check if columns are missing if yes - add them
-    _ensure_columns(db_path, 'products', 
-                    {'created_at': 'DATETIME',
-                     'updated_at': 'DATETIME',
-                     'description': 'TEXT',
-                     'stock': 'INTEGER',
-                     'is_active': 'BOOLEAN',
-                     'category': 'STRING(50)',
-                     'rating': 'FLOAT',
-                     'sale': 'BOOLEAN'})
+    _ensure_columns(
+        db_path,
+        "products",
+        {
+            "created_at": "DATETIME",
+            "updated_at": "DATETIME",
+            "description": "TEXT",
+            "stock": "INTEGER",
+            "is_active": "BOOLEAN",
+            "category": "STRING(50)",
+            "rating": "FLOAT",
+            "sale": "BOOLEAN",
+        },
+    )
 
     # import blueprint that contains routes
     from .routes import bp as routes_bp
@@ -55,6 +66,7 @@ def create_app():
     app.register_blueprint(routes_bp)
     # return the fully configured Flask app
     return app
+
 
 # ensure the given columns exist on the table and add them if missing
 def _ensure_columns(sqlite_path, table, columns):
@@ -89,17 +101,23 @@ def _ensure_columns(sqlite_path, table, columns):
         # After adding missing columns, ensure existing rows do not have NULL timestamps
         # Use SQLite CURRENT_TIMESTAMP to set current date/time for NULL values
         try:
-            if 'created_at' in columns:
-                cur.execute(f"UPDATE {table} SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL;")
-            if 'updated_at' in columns:
-                cur.execute(f"UPDATE {table} SET updated_at = CURRENT_TIMESTAMP WHERE updated_at IS NULL;")
-            if 'stock' in columns:
+            if "created_at" in columns:
+                cur.execute(
+                    f"UPDATE {table} SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL;"
+                )
+            if "updated_at" in columns:
+                cur.execute(
+                    f"UPDATE {table} SET updated_at = CURRENT_TIMESTAMP WHERE updated_at IS NULL;"
+                )
+            if "stock" in columns:
                 cur.execute(f"UPDATE {table} SET stock = 0 WHERE stock IS NULL;")
-            if 'is_active' in columns:
-                cur.execute(f"UPDATE {table} SET is_active = true WHERE is_active IS NULL;")
-            if 'rating' in columns:
+            if "is_active" in columns:
+                cur.execute(
+                    f"UPDATE {table} SET is_active = true WHERE is_active IS NULL;"
+                )
+            if "rating" in columns:
                 cur.execute(f"UPDATE {table} SET rating = 0 WHERE rating IS NULL;")
-            if 'sale' in columns:
+            if "sale" in columns:
                 cur.execute(f"UPDATE {table} SET sale = true WHERE sale IS NULL;")
         except Exception:
             # ignore update errors; keep startup resilient
