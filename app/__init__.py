@@ -75,6 +75,14 @@ def _ensure_columns(sqlite_path, table, columns):
 
     This updates the SQLite file in-place (no backup) as requested.
     """
+
+    # Only run for SQLite files (not Postgres URLs)
+    if not (
+        isinstance(sqlite_path, str)
+        and (sqlite_path.endswith(".db") or sqlite_path.endswith(".sqlite"))
+    ):
+        return
+
     # checks if path to sqlite table exists
     if not os.path.exists(sqlite_path):
         return
