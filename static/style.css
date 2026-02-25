@@ -52,6 +52,7 @@ h1 {
   ); /* Multiply by -1 to get a negative value */
   display: flex;
   align-items: center;
+  z-index: 999;
 
   /* Other */
   background-color: var(--header-bg);
